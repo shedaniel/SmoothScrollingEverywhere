@@ -14,6 +14,7 @@
     "smoothscrollingeverywhere.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.4.0"
+    "fabricloader": ">=0.4.0",
+    "cloth-config2": ">=0.3.1"
   }
 }

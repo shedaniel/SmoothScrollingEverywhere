@@ -23,6 +23,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "cloth-config:ClothConfig2:0.3.1"
+    include "cloth-config:ClothConfig2:0.3.1"
 }
 
 processResources {
