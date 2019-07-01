@@ -1,36 +1,19 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "smoothscrollingeverywhere",
   "version": "${version}",
-
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Smooth Scrolling Everywhere",
+  "description": "Adds smooth scrolling to every list.",
   "authors": [
-    "Me!"
+    "Danielshe"
   ],
-  "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
-  },
-
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
-
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      "net.fabricmc.example.ExampleMod"
-    ]
-  },
+  "license": "Apache-2.0",
+  "icon": "icon.png",
+  "environment": "client",
   "mixins": [
-    "modid.mixins.json"
+    "smoothscrollingeverywhere.mixins.json"
   ],
-
   "depends": {
-    "fabricloader": ">=0.4.0",
-    "fabric": "*"
-  },
-  "suggests": {
-    "flamingo": "*"
+    "fabricloader": ">=0.4.0"
   }
 }
