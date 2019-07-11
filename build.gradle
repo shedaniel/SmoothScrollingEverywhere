@@ -1,47 +1,77 @@
-plugins {
-    id 'fabric-loom' version '0.2.4-SNAPSHOT'
-    id 'maven-publish'
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
 }
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+version = "1.0"
+group = "me.shedaniel" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "smooth-scrolling-everywhere"
 
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-}
-
-repositories {
-    maven { url "https://minecraft.curseforge.com/api/maven" }
+    mappings channel: 'snapshot', version: '20190711-1.14.3'
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    runs {
+        client {
+            workingDirectory project.file('run')
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+        server {
+            workingDirectory project.file('run')
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "cloth-config:ClothConfig2:0.3.1"
-    include "cloth-config:ClothConfig2:0.3.1"
+    minecraft 'net.minecraftforge:forge:1.14.3-27.0.50'
 }
 
 processResources {
     inputs.property "version", project.version
-
     from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
+        include "META-INF/mods.toml"
         expand "version": project.version
     }
-
     from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
+        exclude "META-INF/mods.toml"
     }
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+
+jar {
+    manifest {
+        attributes(["Specification-Title"     : "smooth-scrolling-everywhere",
+                    "Specification-Vendor"    : "Danielshe",
+                    "Specification-Version"   : "1", // We are version 1 of the modlauncher specification
+                    "Implementation-Title"    : project.name,
+                    "Implementation-Version"  : "${version}",
+                    "Implementation-Vendor"   : "Danielshe",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+    }
 }

@@ -1,0 +1,13 @@
+modLoader="javafml"
+loaderVersion="[26,)"
+issueTrackerURL="https://github.com/shedaniel/SmoothScrollingEverywhere/issues/"
+displayURL="https://www.youtube.com/watch?v=TyeTJulxPMg"
+logoFile="smoothscrollingicon.png"
+authors="Danielshe"
+[[mods]]
+modId="smooth-scrolling-everywhere"
+version="${version}"
+displayName="Smooth Scrolling Everywhere"
+description='''
+To provide users with a nice bouncy list.
+'''
