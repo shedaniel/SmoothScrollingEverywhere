@@ -1,47 +1,105 @@
-plugins {
-    id 'fabric-loom' version '0.2.4-SNAPSHOT'
-    id 'maven-publish'
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = 'sponge'
+            url = 'http://repo.spongepowered.org/maven'
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+    }
 }
+
+repositories {
+    maven {
+        name 'spongepowered'
+        url 'https://repo.spongepowered.org/maven/'
+    }
+    maven {
+        url = 'http://repo.elytradev.com/'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'idea'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+version = "1.0"
 group = project.maven_group
 
 minecraft {
+    version = "1.12.2-14.23.5.2838"
+    runDir = "run"
+    mappings = "snapshot_20171003"
 }
 
-repositories {
-    maven { url "https://minecraft.curseforge.com/api/maven" }
+mixin {
+    add sourceSets.main, "mixins.smoothscrollingeverywhere.refmap.json"
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "cloth-config:ClothConfig2:0.3.1"
-    include "cloth-config:ClothConfig2:0.3.1"
+    compile('org.spongepowered:mixin:0.7.10-SNAPSHOT') {
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+    }
 }
 
 processResources {
     inputs.property "version", project.version
-
     from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
+        include "mcmod.info"
         expand "version": project.version
     }
-
     from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
+        exclude "mcmod.info"
     }
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+runClient {
+    args = ["--tweakClass", "org.spongepowered.asm.launch.MixinTweaker"]
+}
+
+shadowJar {
+    exclude 'dummyThing'
+
+    dependencies {
+        include(dependency('org.spongepowered:mixin'))
+    }
+
+    classifier = ''
+}
+
+reobf {
+    shadowJar {
+        mappingType = 'SEARGE'
+        classpath = sourceSets.main.compileClasspath
+    }
+}
+
+build.dependsOn(shadowJar)
+
+jar {
+    manifest {
+        attributes(
+                'MixinConfigs': 'mixins.smoothscrollingeverywhere.json',
+                'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                'TweakOrder': '0',
+                'FMLCorePluginContainsFMLMod': 'true',
+                'ForceLoadAsMod': 'true',
+        )
+    }
 }
