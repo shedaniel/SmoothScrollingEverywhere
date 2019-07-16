@@ -1,6 +1,6 @@
 {
   "required": true,
-  "minVersion": "0.7.10",
+  "minVersion": "0.6.4",
   "package": "me.shedaniel.smoothscrollingeverywhere.mixin",
   "refmap": "mixins.smoothscrollingeverywhere.refmap.json",
   "compatibilityLevel": "JAVA_8",

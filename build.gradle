@@ -37,7 +37,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = "1.0"
+version = "1.1"
 group = project.maven_group
 
 minecraft {
@@ -51,7 +51,7 @@ mixin {
 }
 
 dependencies {
-    compile('org.spongepowered:mixin:0.7.10-SNAPSHOT') {
+    compile('org.spongepowered:mixin:0.6.4-SNAPSHOT') {
         exclude module: 'launchwrapper'
         exclude module: 'guava'
         exclude module: 'gson'
