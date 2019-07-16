@@ -2,11 +2,11 @@ package me.shedaniel.smoothscrollingeverywhere.mixin;
 
 import me.shedaniel.smoothscrollingeverywhere.api.RunSixtyTimesEverySec;
 import net.minecraft.client.gui.GuiSlot;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,13 +24,13 @@ public abstract class MixinGuiSlot {
     @Shadow protected float amountScrolled;
     @Unique protected double scrollVelocity;
     @Unique protected RunSixtyTimesEverySec scroller = () -> {
-        if (this.scrollVelocity == 0.0D && this.amountScrolled >= 0.0D && this.amountScrolled <= this.getMaxScroll()) {
+        if (this.scrollVelocity == 0.0D && this.amountScrolled >= 0.0D && this.amountScrolled <= this.func_148135_f()) {
             this.scrollerUnregisterTick();
         } else {
             double change = this.scrollVelocity * 0.3D;
             if (this.scrollVelocity != 0.0D) {
                 this.amountScrolled += change;
-                this.scrollVelocity -= this.scrollVelocity * (this.amountScrolled >= 0.0D && this.amountScrolled <= this.getMaxScroll() ? 0.2D : 0.4D);
+                this.scrollVelocity -= this.scrollVelocity * (this.amountScrolled >= 0.0D && this.amountScrolled <= this.func_148135_f() ? 0.2D : 0.4D);
                 if (Math.abs(this.scrollVelocity) < 0.1D) {
                     this.scrollVelocity = 0.0D;
                 }
@@ -41,35 +41,32 @@ public abstract class MixinGuiSlot {
                 if (this.amountScrolled > -0.1f && this.amountScrolled < 0.0f) {
                     this.amountScrolled = 0.0f;
                 }
-            } else if (this.amountScrolled > this.getMaxScroll() && this.scrollVelocity == 0.0D) {
-                this.amountScrolled = Math.max(this.amountScrolled - (this.amountScrolled - this.getMaxScroll()) * 0.2f, this.getMaxScroll());
-                if (this.amountScrolled > this.getMaxScroll() && this.amountScrolled < this.getMaxScroll() + 0.1D) {
-                    this.amountScrolled = this.getMaxScroll();
+            } else if (this.amountScrolled > this.func_148135_f() && this.scrollVelocity == 0.0D) {
+                this.amountScrolled = Math.max(this.amountScrolled - (this.amountScrolled - this.func_148135_f()) * 0.2f, this.func_148135_f());
+                if (this.amountScrolled > this.func_148135_f() && this.amountScrolled < this.func_148135_f() + 0.1D) {
+                    this.amountScrolled = this.func_148135_f();
                 }
             }
         }
     };
+
+    @Shadow
+    public abstract int func_148135_f();
     
     @Shadow
-    public abstract int getMaxScroll();
+    public abstract boolean getEnabled();
     
     @Shadow
     protected abstract int getScrollBarX();
     
     @Shadow
-    public abstract int getAmountScrolled();
-    
-    @Shadow
-    protected abstract void renderDecorations(int mouseXIn, int mouseYIn);
-    
-    @Shadow
     protected abstract int getContentHeight();
     
     @Shadow
-    protected abstract void bindAmountScrolled();
-    
+    public abstract int getAmountScrolled();
+
     @Shadow
-    public abstract boolean getEnabled();
+    protected abstract void func_148142_b(int p_148142_1_, int p_148142_2_);
     
     @Unique
     private void scrollerUnregisterTick() {
@@ -87,7 +84,7 @@ public abstract class MixinGuiSlot {
                      remap = false), cancellable = true)
     public void handleMouseScroll(CallbackInfo callbackInfo) {
         if (Mouse.isButtonDown(0) && this.getEnabled())
-            bindAmountScrolled();
+            bindAmountScrolled((GuiSlot) (Object) this);
         else {
             callbackInfo.cancel();
             int i2 = Mouse.getEventDWheel();
@@ -97,7 +94,7 @@ public abstract class MixinGuiSlot {
                 } else if (i2 < 0) {
                     i2 = -1;
                 }
-                if (this.amountScrolled <= this.getMaxScroll() && i2 < 0.0D)
+                if (this.amountScrolled <= this.func_148135_f() && i2 < 0.0D)
                     this.scrollVelocity += 16.0D;
                 if (this.amountScrolled >= 0.0D && i2 > 0.0D)
                     this.scrollVelocity -= 16.0D;
@@ -108,18 +105,18 @@ public abstract class MixinGuiSlot {
     }
     
     @Inject(method = "drawScreen",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiSlot;getMaxScroll()I", ordinal = 0,
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiSlot;func_148135_f()I", ordinal = 0,
                      shift = At.Shift.AFTER), cancellable = true)
     public void render(int int_1, int int_2, float float_1, CallbackInfo callbackInfo) {
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
+        WorldRenderer buffer = tessellator.getWorldRenderer();
         int scrollbarPositionMinX = this.getScrollBarX();
         int scrollbarPositionMaxX = scrollbarPositionMinX + 6;
-        int maxScroll = this.getMaxScroll();
+        int maxScroll = this.func_148135_f();
         if (maxScroll > 0) {
             int height = (this.bottom - this.top) * (this.bottom - this.top) / this.getContentHeight();
-            height = MathHelper.clamp(height, 32, this.bottom - this.top - 8);
-            height = (int) ((double) height - Math.min((double) (this.amountScrolled < 0.0D ? (int) (-this.amountScrolled) : (this.amountScrolled > (double) this.getMaxScroll() ? (int) this.amountScrolled - this.getMaxScroll() : 0)), (double) height * 0.75D));
+            height = MathHelper.clamp_int(height, 32, this.bottom - this.top - 8);
+            height = (int) ((double) height - Math.min((double) (this.amountScrolled < 0.0D ? (int) (-this.amountScrolled) : (this.amountScrolled > (double) this.func_148135_f() ? (int) this.amountScrolled - this.func_148135_f() : 0)), (double) height * 0.75D));
             int minY = Math.min(Math.max((int) this.getAmountScrolled() * (this.bottom - this.top - height) / maxScroll + this.top, this.top), this.bottom - height);
             buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
             buffer.pos((double) scrollbarPositionMinX, (double) this.bottom, 0.0D).tex(0.0D, 1.0D).color(0, 0, 0, 255).endVertex();
@@ -140,7 +137,7 @@ public abstract class MixinGuiSlot {
             buffer.pos((double) scrollbarPositionMinX, (double) minY, 0.0D).tex(0.0D, 0.0D).color(192, 192, 192, 255).endVertex();
             tessellator.draw();
         }
-        this.renderDecorations(int_1, int_2);
+        this.func_148142_b(int_1, int_2);
         GlStateManager.enableTexture2D();
         GlStateManager.shadeModel(7424);
         GlStateManager.enableAlpha();

@@ -4,7 +4,7 @@
     "name": "Smooth Scrolling Everywhere",
     "description": "Adds smooth scrolling to every list.",
     "version": "${version}",
-    "mcversion": "1.12.2",
+    "mcversion": "1.8.9",
     "url": "https://github.com/shedaniel/SmoothScrollingEverywhere",
     "authorList": ["Danielshe"],
     "credits": ""

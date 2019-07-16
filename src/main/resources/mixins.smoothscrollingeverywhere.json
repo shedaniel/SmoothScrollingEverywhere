@@ -5,5 +5,5 @@
   "refmap": "mixins.smoothscrollingeverywhere.refmap.json",
   "compatibilityLevel": "JAVA_8",
   "target": "@env(DEFAULT)",
-  "mixins": ["MixinGuiScrollingList", "MixinGuiSlot"]
+  "mixins": ["MixinGuiSlot", "MixinGuiScrollingList"]
 }
