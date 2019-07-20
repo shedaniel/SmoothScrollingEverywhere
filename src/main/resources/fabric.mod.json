@@ -16,5 +16,13 @@
   "depends": {
     "fabricloader": ">=0.4.0",
     "cloth-config2": ">=0.3.1"
+  },
+  "contact": {
+    "homepage": "https://curseforge.com/minecraft/mc-mods/smooth-scrolling-everywhere-fabric",
+    "sources": "https://github.com/shedaniel/SmoothScrollingEverywhere",
+    "issues": "https://github.com/shedaniel/SmoothScrollingEverywhere/issues"
+  },
+  "custom": {
+    "modmenu:clientsideOnly": true
   }
 }
