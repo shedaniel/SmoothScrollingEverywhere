@@ -3,8 +3,8 @@ var FieldNode = Java.type("org.objectweb.asm.tree.FieldNode");
 var InsnNode = Java.type("org.objectweb.asm.tree.InsnNode");
 var VarInsnNode = Java.type("org.objectweb.asm.tree.VarInsnNode");
 var MethodInsnNode = Java.type("org.objectweb.asm.tree.MethodInsnNode");
-
-// var AbstractListScroller = Java.type("me.shedaniel.smoothscrollingeverywhere.AbstractListScroller");
+var ASMAPI = Java.type("net.minecraftforge.coremod.api.ASMAPI");
+// var ASMAPIMethodType = Java.type("net.minecraftforge.coremod.api.ASMAPI.MethodType");
 
 function initializeCoreMod() {
     return {
@@ -24,7 +24,7 @@ function initializeCoreMod() {
                         var instructions = method.instructions;
                         var first = instructions.get(0);
                         instructions.insertBefore(first, new VarInsnNode(Opcodes.ALOAD, 0));
-                        instructions.insertBefore(first, new MethodInsnNode(Opcodes.INVOKESTATIC, "me/shedaniel/smoothscrollingeverywhere/CustomAbstractList", "setScrollAmount", "(Lnet/minecraft/client/gui/widget/list/AbstractList;)V", false));
+                        instructions.insertBefore(first, ASMAPI.buildMethodCall("me/shedaniel/smoothscrollingeverywhere/CustomAbstractList", "setScrollAmount", "(Lnet/minecraft/client/gui/widget/list/AbstractList;)V", ASMAPI.MethodType.STATIC));
                     } else if (name == "mouseScrolled") {
                         var instructions = method.instructions;
                         var first = instructions.get(0);
@@ -41,7 +41,7 @@ function initializeCoreMod() {
                             var insn = insnArray[i];
                             if (insn instanceof MethodInsnNode) {
                                 if (insn.owner == "net/minecraft/client/gui/widget/list/AbstractList" &&
-                                insn.name == "getMaxScroll" && insn.desc == "()I") {
+                                    insn.name == "getMaxScroll" && insn.desc == "()I") {
                                     instructions.insertBefore(insn, new VarInsnNode(Opcodes.ALOAD, 0));
                                     instructions.insertBefore(insn, new VarInsnNode(Opcodes.ILOAD, 1));
                                     instructions.insertBefore(insn, new VarInsnNode(Opcodes.ILOAD, 2));
