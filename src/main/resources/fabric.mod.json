@@ -13,9 +13,23 @@
   "mixins": [
     "smoothscrollingeverywhere.mixins.json"
   ],
+  "entrypoints": {
+    "client": [
+      {
+        "value": "me.shedaniel.smoothscrollingeverywhere.SmoothScrollingEverywhere",
+        "adapter": "kotlin"
+      }
+    ],
+    "modmenu": [
+      {
+        "value": "me.shedaniel.smoothscrollingeverywhere.SmoothScrollingEverywhereMM",
+        "adapter": "kotlin"
+      }
+    ]
+  },
   "depends": {
     "fabricloader": ">=0.4.0",
-    "cloth-config2": ">=0.3.1"
+    "cloth-config2": ">=1.3"
   },
   "contact": {
     "homepage": "https://curseforge.com/minecraft/mc-mods/smooth-scrolling-everywhere-fabric",
