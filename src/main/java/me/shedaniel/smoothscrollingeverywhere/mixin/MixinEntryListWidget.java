@@ -1,7 +1,6 @@
 package me.shedaniel.smoothscrollingeverywhere.mixin;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.shedaniel.clothconfig2.api.RunSixtyTimesEverySec;
 import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget.SmoothScrollingSettings;
 import me.shedaniel.clothconfig2.gui.widget.DynamicNewSmoothScrollingEntryListWidget.Precision;
 import me.shedaniel.math.api.Rectangle;
@@ -28,20 +27,6 @@ public abstract class MixinEntryListWidget {
     @Unique protected long start;
     @Unique protected long duration;
     @Shadow private double scrollAmount;
-    @Unique private RunSixtyTimesEverySec clamper = () -> {
-        target = clamp(target);
-        if (target < 0) {
-            target = target * SmoothScrollingEverywhere.INSTANCE.getBounceBackMultiplier();
-        } else if (target > getMaxScroll()) {
-            target = (target - getMaxScroll()) * SmoothScrollingEverywhere.INSTANCE.getBounceBackMultiplier() + getMaxScroll();
-        } else
-            unregisterClamper();
-    };
-    
-    @Unique
-    private void unregisterClamper() {
-        clamper.unregisterTick();
-    }
     
     @Shadow
     protected abstract int getMaxScroll();
@@ -102,12 +87,15 @@ public abstract class MixinEntryListWidget {
     }
     
     @Inject(method = "render", at = @At("HEAD"))
-    public void render(int int_1, int int_2, float float_1, CallbackInfo callbackInfo) {
+    public void render(int int_1, int int_2, float delta, CallbackInfo callbackInfo) {
         target = clamp(target);
-        if ((target < 0 || target > getMaxScroll()) && !clamper.isRegistered())
-            clamper.registerTick();
+        if (target < 0) {
+            target -= target * (1 - SmoothScrollingEverywhere.INSTANCE.getBounceBackMultiplier()) * delta / 3;
+        } else if (target > getMaxScroll()) {
+            target = (target - getMaxScroll()) * (1 - (1 - SmoothScrollingEverywhere.INSTANCE.getBounceBackMultiplier()) * delta / 3) + getMaxScroll();
+        }
         if (!Precision.almostEquals(scrollAmount, target, Precision.FLOAT_EPSILON))
-            scrollAmount = (float) Interpolation.expoEase(scrollAmount, target, Math.min((System.currentTimeMillis() - start) / ((double) duration), 1));
+            scrollAmount = (float) expoEase(scrollAmount, target, Math.min((System.currentTimeMillis() - start) / ((double) duration), 1));
         else
             scrollAmount = target;
     }
@@ -156,10 +144,9 @@ public abstract class MixinEntryListWidget {
         callbackInfo.cancel();
     }
     
-    public static class Interpolation {
-        public static double expoEase(double start, double end, double amount) {
-            return start + (end - start) * SmoothScrollingEverywhere.INSTANCE.getEasingMethod().apply(amount);
-        }
+    @Unique
+    public double expoEase(double start, double end, double amount) {
+        return start + (end - start) * SmoothScrollingEverywhere.INSTANCE.getEasingMethod().apply(amount);
     }
     
 }
