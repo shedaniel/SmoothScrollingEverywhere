@@ -13,7 +13,7 @@ object SmoothScrollingEverywhere : ClientModInitializer {
     var easingMethod: EasingMethod = EasingMethod.EasingMethodImpl.QUART
     var scrollDuration: Long = 1000
     var scrollStep = 16.0
-    var bounceBackMultiplier = 0.85
+    var bounceBackMultiplier = 0.24
 
     override fun onInitializeClient() {
         loadConfig()
@@ -26,7 +26,7 @@ object SmoothScrollingEverywhere : ClientModInitializer {
             easingMethod = EasingMethod.EasingMethodImpl.QUART
             scrollDuration = 1000
             scrollStep = 16.0
-            bounceBackMultiplier = .93
+            bounceBackMultiplier = .24
             if (!file.exists()) saveConfig()
 
             val properties = Properties()
@@ -36,13 +36,13 @@ object SmoothScrollingEverywhere : ClientModInitializer {
                     ?: EasingMethod.EasingMethodImpl.QUART
             scrollDuration = properties.getProperty("scrollDuration")?.toLongOrNull() ?: 1000
             scrollStep = properties.getProperty("scrollStep")?.toDoubleOrNull() ?: 16.0
-            bounceBackMultiplier = properties.getProperty("bounceBackMultiplier")?.toDoubleOrNull() ?: 0.85
+            bounceBackMultiplier = properties.getProperty("bounceBackMultiplierNew")?.toDoubleOrNull() ?: 0.24
         } catch (e: Exception) {
             e.printStackTrace()
             easingMethod = EasingMethod.EasingMethodImpl.QUART
             scrollDuration = 1000
             scrollStep = 16.0
-            bounceBackMultiplier = .93
+            bounceBackMultiplier = .24
             try {
                 if (file.exists())
                     file.delete()
@@ -69,7 +69,7 @@ object SmoothScrollingEverywhere : ClientModInitializer {
             easingMethod = EasingMethod.EasingMethodImpl.QUART
             scrollDuration = 1000
             scrollStep = 16.0
-            bounceBackMultiplier = .93
+            bounceBackMultiplier = .24
         }
 
     }

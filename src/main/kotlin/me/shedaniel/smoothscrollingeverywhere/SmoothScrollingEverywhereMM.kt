@@ -43,7 +43,7 @@ object SmoothScrollingEverywhereMM : ModMenuApi {
         )
         scrolling.addEntry(
                 entryBuilder.startDoubleField("Bounce Multiplier", bounceBackMultiplier)
-                        .setDefaultValue(0.85)
+                        .setDefaultValue(0.24)
                         .setSaveConsumer { bounceBackMultiplier = it }
                         .build()
         )
