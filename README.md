@@ -1,1 +1,1 @@
-# Smooth Scrolling Everywhere
+This Readme was made by the non-bot gang
