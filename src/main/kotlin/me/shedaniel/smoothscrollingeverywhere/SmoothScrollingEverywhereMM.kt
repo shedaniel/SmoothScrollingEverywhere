@@ -20,7 +20,7 @@ object SmoothScrollingEverywhereMM : ModMenuApi {
         val builder = ConfigBuilder.create().setParentScreen(parent).setTitle("Smooth Scrolling Everywhere Config")
         builder.defaultBackgroundTexture = Identifier("minecraft:textures/block/oak_planks.png")
         val scrolling = builder.getOrCreateCategory("Scrolling")
-        val entryBuilder = ConfigEntryBuilder.create()
+        val entryBuilder = builder.entryBuilder()
         scrolling.addEntry(
                 entryBuilder.startDropdownMenu("Easing Method", DropdownMenuBuilder.TopCellElementBuilder.of(easingMethod, { str -> EasingMethods.getMethods().firstOrNull { it.toString().equals(str, true) } }), DropdownMenuBuilder.CellCreatorBuilder.of())
                         .setDefaultValue(EasingMethod.EasingMethodImpl.QUART)
