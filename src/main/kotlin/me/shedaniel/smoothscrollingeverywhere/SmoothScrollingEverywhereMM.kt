@@ -23,7 +23,7 @@ object SmoothScrollingEverywhereMM : ModMenuApi {
         val entryBuilder = builder.entryBuilder()
         scrolling.addEntry(
                 entryBuilder.startDropdownMenu("Easing Method", DropdownMenuBuilder.TopCellElementBuilder.of(easingMethod, { str -> EasingMethods.getMethods().firstOrNull { it.toString().equals(str, true) } }), DropdownMenuBuilder.CellCreatorBuilder.of())
-                        .setDefaultValue(EasingMethod.EasingMethodImpl.QUART)
+                        .setDefaultValue(EasingMethod.EasingMethodImpl.LINEAR)
                         .setSelections(EasingMethods.getMethods())
                         .setSaveConsumer { easingMethod = it as EasingMethod }
                         .build()
@@ -31,13 +31,13 @@ object SmoothScrollingEverywhereMM : ModMenuApi {
         scrolling.addEntry(
                 entryBuilder.startLongSlider("Scroll Duration", scrollDuration, 0, 5000)
                         .setTextGetter { integer -> if (integer <= 0) "Value: Disabled" else if (integer > 1500) String.format("Value: %.1fs", integer / 1000f) else "Value: " + integer + "ms" }
-                        .setDefaultValue(1000)
+                        .setDefaultValue(600)
                         .setSaveConsumer { scrollDuration = it }
                         .build()
         )
         scrolling.addEntry(
                 entryBuilder.startDoubleField("Scroll Step", scrollStep)
-                        .setDefaultValue(16.0)
+                        .setDefaultValue(19.0)
                         .setSaveConsumer { scrollStep = it }
                         .build()
         )
