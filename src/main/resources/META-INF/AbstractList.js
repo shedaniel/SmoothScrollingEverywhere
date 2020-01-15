@@ -4,6 +4,7 @@ var InsnNode = Java.type("org.objectweb.asm.tree.InsnNode");
 var VarInsnNode = Java.type("org.objectweb.asm.tree.VarInsnNode");
 var MethodInsnNode = Java.type("org.objectweb.asm.tree.MethodInsnNode");
 var ASMAPI = Java.type("net.minecraftforge.coremod.api.ASMAPI");
+
 // var ASMAPIMethodType = Java.type("net.minecraftforge.coremod.api.ASMAPI.MethodType");
 
 function initializeCoreMod() {
@@ -14,8 +15,9 @@ function initializeCoreMod() {
                 'name': 'net.minecraft.client.gui.widget.list.AbstractList'
             },
             'transformer': function (classNode) {
-                classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "smoothscrollingeverywhere_scrollVelocity", "D", null, 0.0));
-                classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "smoothscrollingeverywhere_scroller", "Lme/shedaniel/smoothscrollingeverywhere/api/RunSixtyTimesEverySec;", null, null));
+                classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "smoothscrollingeverywhere_target", "D", null, 0.0));
+                classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "smoothscrollingeverywhere_start", "J", null, 0));
+                classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "smoothscrollingeverywhere_duration", "J", null, 0));
                 var methods = classNode.methods;
                 for (m in methods) {
                     var method = methods[m];
@@ -24,7 +26,9 @@ function initializeCoreMod() {
                         var instructions = method.instructions;
                         var first = instructions.get(0);
                         instructions.insertBefore(first, new VarInsnNode(Opcodes.ALOAD, 0));
-                        instructions.insertBefore(first, ASMAPI.buildMethodCall("me/shedaniel/smoothscrollingeverywhere/CustomAbstractList", "setScrollAmount", "(Lnet/minecraft/client/gui/widget/list/AbstractList;)V", ASMAPI.MethodType.STATIC));
+                        instructions.insertBefore(first, new VarInsnNode(Opcodes.DLOAD, 1));
+                        instructions.insertBefore(first, ASMAPI.buildMethodCall("me/shedaniel/smoothscrollingeverywhere/CustomAbstractList", "clamp", "(Lnet/minecraft/client/gui/widget/list/AbstractList;D)V", ASMAPI.MethodType.STATIC));
+                        instructions.insertBefore(first, new InsnNode(Opcodes.RETURN));
                     } else if (name == "mouseScrolled") {
                         var instructions = method.instructions;
                         var first = instructions.get(0);
@@ -51,6 +55,10 @@ function initializeCoreMod() {
                                 }
                             }
                         }
+                        var first = instructions.get(0);
+                        instructions.insertBefore(first, new VarInsnNode(Opcodes.ALOAD, 0));
+                        instructions.insertBefore(first, new VarInsnNode(Opcodes.FLOAD, 3));
+                        instructions.insertBefore(first, new MethodInsnNode(Opcodes.INVOKESTATIC, "me/shedaniel/smoothscrollingeverywhere/CustomAbstractList", "updatePosition", "(Lnet/minecraft/client/gui/widget/list/AbstractList;F)V", false));
                     }
                 }
                 return classNode;
