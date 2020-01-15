@@ -3,7 +3,6 @@ import java.text.SimpleDateFormat
 plugins {
     id 'fabric-loom' version '0.2.6-SNAPSHOT'
     id 'maven-publish'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.50'
 }
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
@@ -27,14 +26,12 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation 'me.shedaniel.cloth:config-2:2.6.6'
+    modImplementation 'me.shedaniel.cloth:config-2:2.7'
     modImplementation "io.github.prospector:modmenu:${modmenu_version}"
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.3.50+build.2")
-    include 'me.shedaniel.cloth:config-2:2.6.6'
-    include("net.fabricmc:fabric-language-kotlin:1.3.50+build.2")
+    include 'me.shedaniel.cloth:config-2:2.7'
 }
 
 processResources {
@@ -55,11 +52,4 @@ processResources {
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
-}
-
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
 }

@@ -14,17 +14,8 @@
     "smoothscrollingeverywhere.mixins.json"
   ],
   "entrypoints": {
-    "client": [
-      {
-        "value": "me.shedaniel.smoothscrollingeverywhere.SmoothScrollingEverywhere",
-        "adapter": "kotlin"
-      }
-    ],
     "modmenu": [
-      {
-        "value": "me.shedaniel.smoothscrollingeverywhere.SmoothScrollingEverywhereMM",
-        "adapter": "kotlin"
-      }
+      "me.shedaniel.smoothscrollingeverywhere.SmoothScrollingEverywhereMM"
     ]
   },
   "depends": {
