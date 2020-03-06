@@ -37,11 +37,11 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = "1.0"
+version = "1.1"
 group = project.maven_group
 
 minecraft {
-    version = "1.12.2-14.23.5.2838"
+    version = "1.12.2-14.23.5.2847"
     runDir = "run"
     mappings = "snapshot_20171003"
 }
