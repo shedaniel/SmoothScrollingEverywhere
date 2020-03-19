@@ -2,7 +2,7 @@ package me.shedaniel.smoothscrollingeverywhere.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.clothconfig2.ClothConfigInitializer;
-import me.shedaniel.math.api.Rectangle;
+import me.shedaniel.math.Rectangle;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
@@ -38,7 +38,7 @@ public abstract class MixinEntryListWidget {
     protected abstract int getMaxPosition();
     
     @Shadow
-    protected abstract int getScrollbarPosition();
+    protected abstract int getScrollbarPositionX();
     
     @Shadow
     public abstract double getScrollAmount();
@@ -89,7 +89,7 @@ public abstract class MixinEntryListWidget {
     public void renderScrollbar(int int_1, int int_2, float float_1, CallbackInfo callbackInfo) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
-        int scrollbarPositionMinX = this.getScrollbarPosition();
+        int scrollbarPositionMinX = this.getScrollbarPositionX();
         int scrollbarPositionMaxX = scrollbarPositionMinX + 6;
         int maxScroll = this.getMaxScroll();
         if (maxScroll > 0) {
@@ -98,8 +98,8 @@ public abstract class MixinEntryListWidget {
             height = (int) ((double) height - Math.min(this.scrollAmount < 0.0D ? (int) (-this.scrollAmount) : (this.scrollAmount > (double) this.getMaxScroll() ? (int) this.scrollAmount - this.getMaxScroll() : 0), (double) height * 0.95D));
             height = Math.max(10, height);
             int minY = Math.min(Math.max((int) this.getScrollAmount() * (this.bottom - this.top - height) / maxScroll + this.top, this.top), this.bottom - height);
-            int bottomc = new Rectangle(scrollbarPositionMinX, minY, scrollbarPositionMaxX - scrollbarPositionMinX, height).contains(int_1, int_2) ? 168 : 128;
-            int topc = new Rectangle(scrollbarPositionMinX, minY, scrollbarPositionMaxX - scrollbarPositionMinX, height).contains(int_1, int_2) ? 222 : 172;
+            int bottomColor = new Rectangle(scrollbarPositionMinX, minY, scrollbarPositionMaxX - scrollbarPositionMinX, height).contains(int_1, int_2) ? 168 : 128;
+            int topColor = new Rectangle(scrollbarPositionMinX, minY, scrollbarPositionMaxX - scrollbarPositionMinX, height).contains(int_1, int_2) ? 222 : 172;
             buffer.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
             buffer.vertex(scrollbarPositionMinX, this.bottom, 0.0D).texture(0.0F, 1.0F).color(0, 0, 0, 255).next();
             buffer.vertex(scrollbarPositionMaxX, this.bottom, 0.0D).texture(1.0F, 1.0F).color(0, 0, 0, 255).next();
@@ -107,16 +107,16 @@ public abstract class MixinEntryListWidget {
             buffer.vertex(scrollbarPositionMinX, this.top, 0.0D).texture(0.0F, 0.0F).color(0, 0, 0, 255).next();
             tessellator.draw();
             buffer.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
-            buffer.vertex(scrollbarPositionMinX, minY + height, 0.0D).texture(0.0F, 1.0F).color(bottomc, bottomc, bottomc, 255).next();
-            buffer.vertex(scrollbarPositionMaxX, minY + height, 0.0D).texture(1.0F, 1.0F).color(bottomc, bottomc, bottomc, 255).next();
-            buffer.vertex(scrollbarPositionMaxX, minY, 0.0D).texture(1.0F, 0.0F).color(bottomc, bottomc, bottomc, 255).next();
-            buffer.vertex(scrollbarPositionMinX, minY, 0.0D).texture(0.0F, 0.0F).color(bottomc, bottomc, bottomc, 255).next();
+            buffer.vertex(scrollbarPositionMinX, minY + height, 0.0D).texture(0.0F, 1.0F).color(bottomColor, bottomColor, bottomColor, 255).next();
+            buffer.vertex(scrollbarPositionMaxX, minY + height, 0.0D).texture(1.0F, 1.0F).color(bottomColor, bottomColor, bottomColor, 255).next();
+            buffer.vertex(scrollbarPositionMaxX, minY, 0.0D).texture(1.0F, 0.0F).color(bottomColor, bottomColor, bottomColor, 255).next();
+            buffer.vertex(scrollbarPositionMinX, minY, 0.0D).texture(0.0F, 0.0F).color(bottomColor, bottomColor, bottomColor, 255).next();
             tessellator.draw();
             buffer.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
-            buffer.vertex(scrollbarPositionMinX, minY + height - 1, 0.0D).texture(0.0F, 1.0F).color(topc, topc, topc, 255).next();
-            buffer.vertex(scrollbarPositionMaxX - 1, minY + height - 1, 0.0D).texture(1.0F, 1.0F).color(topc, topc, topc, 255).next();
-            buffer.vertex(scrollbarPositionMaxX - 1, minY, 0.0D).texture(1.0F, 0.0F).color(topc, topc, topc, 255).next();
-            buffer.vertex(scrollbarPositionMinX, minY, 0.0D).texture(0.0F, 0.0F).color(topc, topc, topc, 255).next();
+            buffer.vertex(scrollbarPositionMinX, minY + height - 1, 0.0D).texture(0.0F, 1.0F).color(topColor, topColor, topColor, 255).next();
+            buffer.vertex(scrollbarPositionMaxX - 1, minY + height - 1, 0.0D).texture(1.0F, 1.0F).color(topColor, topColor, topColor, 255).next();
+            buffer.vertex(scrollbarPositionMaxX - 1, minY, 0.0D).texture(1.0F, 0.0F).color(topColor, topColor, topColor, 255).next();
+            buffer.vertex(scrollbarPositionMinX, minY, 0.0D).texture(0.0F, 0.0F).color(topColor, topColor, topColor, 255).next();
             tessellator.draw();
         }
         this.renderDecorations(int_1, int_2);

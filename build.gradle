@@ -1,22 +1,15 @@
 import java.text.SimpleDateFormat
 
 plugins {
-    id 'fabric-loom' version '0.2.6-SNAPSHOT'
+    id 'fabric-loom' version '0.2.7-SNAPSHOT'
     id 'maven-publish'
 }
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = ((String) project.mod_version).contains("unstable") ? (project.mod_version + "." + buildTime()) : project.mod_version
+version = project.mod_version
 group = project.maven_group
-
-static def buildTime() {
-    def df = new SimpleDateFormat("yyyyMMddHHmm")
-    df.setTimeZone(TimeZone.getTimeZone("UTC"))
-    return df.format(new Date())
-}
-
 minecraft {
 }
 
@@ -29,9 +22,9 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation 'me.shedaniel.cloth:config-2:2.10'
+    modImplementation 'me.shedaniel.cloth:config-2:3.1.0-unstable'
     modImplementation "io.github.prospector:modmenu:${modmenu_version}"
-    include 'me.shedaniel.cloth:config-2:2.10'
+    include 'me.shedaniel.cloth:config-2:3.1.0-unstable'
 }
 
 processResources {
