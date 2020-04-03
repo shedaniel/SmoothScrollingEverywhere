@@ -1,8 +1,9 @@
-import java.text.SimpleDateFormat
-
 plugins {
     id 'fabric-loom' version '0.2.7-SNAPSHOT'
     id 'maven-publish'
+    id 'maven'
+    id 'signing'
+    id 'com.jfrog.bintray' version '1.8.4'
 }
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
@@ -40,9 +41,73 @@ processResources {
     }
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+}
+
+jar {
+    from "LICENSE"
+}
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_KEY')
+    publications = ["mavenJava"]
+    override = true
+    pkg {
+        repo = "shedaniel-mods"
+        name = "SmoothScrollingEverywhere"
+        userOrg = "shedaniel"
+        licenses = ["GPL-3.0"]
+        version {
+            name = project.version
+            vcsTag = project.version
+            released = new Date()
+            desc = "Smooth Scrolling Everywhere"
+            githubRepo = 'shedaniel/SmoothScrollingEverywhere'
+            websiteUrl = 'https://github.com/shedaniel/SmoothScrollingEverywhere'
+            issueTrackerUrl = 'https://github.com/shedaniel/SmoothScrollingEverywhere/issues'
+            vcsUrl = 'https://github.com/shedaniel/SmoothScrollingEverywhere.git'
+            gpg {
+                sign = true
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocs(type: Javadoc) {
+    source = sourceSets.main.allJava
+}
+
+task javadocsJar(type: Jar, dependsOn: javadocs) {
+    classifier = "javadocs"
+    javadocs.failOnError false
+    from javadocs.destinationDir
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact(file("${project.buildDir}/libs/${project.archivesBaseName}-${project.version}.jar")) {
+                builtBy remapJar
+            }
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
+            artifact javadocsJar
+            groupId = project.group
+            artifactId  = project.archivesBaseName
+            version = project.version
+        }
+    }
+
+    repositories {
+        // uncomment to publish to the local maven
+        // mavenLocal()
+    }
 }
