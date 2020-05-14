@@ -2,11 +2,13 @@ package me.shedaniel.smoothscrollingeverywhere.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.clothconfig2.ClothConfigInitializer;
+import me.shedaniel.clothconfig2.api.ScrollingContainer;
 import me.shedaniel.math.Rectangle;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static me.shedaniel.clothconfig2.ClothConfigInitializer.clamp;
+import static me.shedaniel.clothconfig2.api.ScrollingContainer.clampExtension;
 
 @Mixin(EntryListWidget.class)
 public abstract class MixinEntryListWidget {
@@ -32,7 +34,7 @@ public abstract class MixinEntryListWidget {
     protected abstract int getMaxScroll();
     
     @Shadow
-    protected abstract void renderDecorations(int int_1, int int_2);
+    protected abstract void renderDecorations(MatrixStack stack, int int_1, int int_2);
     
     @Shadow
     protected abstract int getMaxPosition();
@@ -45,8 +47,8 @@ public abstract class MixinEntryListWidget {
     
     @Inject(method = "setScrollAmount", at = @At("HEAD"))
     public void setScrollAmount(double double_1, CallbackInfo callbackInfo) {
-        scrollAmount = clamp(double_1, getMaxScroll());
-        target = clamp(double_1, getMaxScroll());
+        scrollAmount = clampExtension(double_1, getMaxScroll());
+        target = clampExtension(double_1, getMaxScroll());
     }
     
     @Inject(method = "mouseScrolled", cancellable = true, at = @At("HEAD"))
@@ -67,7 +69,7 @@ public abstract class MixinEntryListWidget {
     
     @Unique
     public void scrollTo(double value, boolean animated, long duration) {
-        target = clamp(value, getMaxScroll());
+        target = clampExtension(value, getMaxScroll());
         
         if (animated) {
             start = System.currentTimeMillis();
@@ -77,16 +79,16 @@ public abstract class MixinEntryListWidget {
     }
     
     @Inject(method = "render", at = @At("HEAD"))
-    public void render(int int_1, int int_2, float delta, CallbackInfo callbackInfo) {
+    public void render(MatrixStack stack, int int_1, int int_2, float delta, CallbackInfo callbackInfo) {
         double[] target = new double[]{this.target};
-        this.scrollAmount = ClothConfigInitializer.handleScrollingPosition(target, this.scrollAmount, this.getMaxScroll(), delta, (double) this.start, (double) this.duration);
+        this.scrollAmount = ScrollingContainer.handleScrollingPosition(target, this.scrollAmount, this.getMaxScroll(), delta, (double) this.start, (double) this.duration);
         this.target = target[0];
     }
     
     @Inject(method = "render",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/EntryListWidget;getMaxScroll()I", ordinal = 0, shift = At.Shift.AFTER),
             cancellable = true)
-    public void renderScrollbar(int int_1, int int_2, float float_1, CallbackInfo callbackInfo) {
+    public void renderScrollbar(MatrixStack stack, int int_1, int int_2, float float_1, CallbackInfo callbackInfo) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         int scrollbarPositionMinX = this.getScrollbarPositionX();
@@ -119,7 +121,7 @@ public abstract class MixinEntryListWidget {
             buffer.vertex(scrollbarPositionMinX, minY, 0.0D).texture(0.0F, 0.0F).color(topColor, topColor, topColor, 255).next();
             tessellator.draw();
         }
-        this.renderDecorations(int_1, int_2);
+        this.renderDecorations(stack, int_1, int_2);
         RenderSystem.enableTexture();
         RenderSystem.shadeModel(7424);
         RenderSystem.enableAlphaTest();
