@@ -1,11 +1,13 @@
 package me.shedaniel.smoothscrollingeverywhere;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.widget.list.AbstractList;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.coremod.api.ASMAPI;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -94,10 +96,7 @@ public class CustomAbstractList {
             }
         } else
             target[0] = clamp(target[0], maxScroll, 0);
-        if (!Precision.almostEquals(scroll, target[0], Precision.FLOAT_EPSILON))
-            return expoEase(scroll, target[0], Math.min((System.currentTimeMillis() - start) / duration, 1));
-        else
-            return target[0];
+        return expoEase(scroll, target[0], Math.min((System.currentTimeMillis() - start) / duration * delta * 3, 1));
     }
     
     public static double expoEase(double start, double end, double amount) {
@@ -149,7 +148,7 @@ public class CustomAbstractList {
         setTarget(list, target[0]);
     }
     
-    public static void renderScrollbar(AbstractList list, int mouseX, int mouseY) {
+    public static void renderScrollbar(AbstractList list, MatrixStack stack, int mouseX, int mouseY) {
         try {
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder buffer = tessellator.getBuffer();
@@ -164,27 +163,27 @@ public class CustomAbstractList {
                 height = (int) ((double) height - Math.min(list.scrollAmount < 0.0D ? (int) (-list.scrollAmount) : (list.scrollAmount > (double) list.getMaxScroll() ? (int) list.scrollAmount - list.getMaxScroll() : 0), (double) height * 0.75D));
                 int minY = Math.min(Math.max((int) list.getScrollAmount() * (list.getBottom() - list.getTop() - height) / maxScroll + list.getTop(), list.getTop()), list.getBottom() - height);
                 buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-                buffer.func_225582_a_(scrollbarPositionMinX, list.getBottom(), 0.0D).func_225583_a_(0.0F, 1.0F).func_225586_a_(0, 0, 0, 255).endVertex();
-                buffer.func_225582_a_(scrollbarPositionMaxX, list.getBottom(), 0.0D).func_225583_a_(1.0F, 1.0F).func_225586_a_(0, 0, 0, 255).endVertex();
-                buffer.func_225582_a_(scrollbarPositionMaxX, list.getTop(), 0.0D).func_225583_a_(1.0F, 0.0F).func_225586_a_(0, 0, 0, 255).endVertex();
-                buffer.func_225582_a_(scrollbarPositionMinX, list.getTop(), 0.0D).func_225583_a_(0.0F, 0.0F).func_225586_a_(0, 0, 0, 255).endVertex();
+                buffer.pos(scrollbarPositionMinX, list.getBottom(), 0.0D).tex(0.0F, 1.0F).color(0, 0, 0, 255).endVertex();
+                buffer.pos(scrollbarPositionMaxX, list.getBottom(), 0.0D).tex(1.0F, 1.0F).color(0, 0, 0, 255).endVertex();
+                buffer.pos(scrollbarPositionMaxX, list.getTop(), 0.0D).tex(1.0F, 0.0F).color(0, 0, 0, 255).endVertex();
+                buffer.pos(scrollbarPositionMinX, list.getTop(), 0.0D).tex(0.0F, 0.0F).color(0, 0, 0, 255).endVertex();
                 tessellator.draw();
                 buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-                buffer.func_225582_a_(scrollbarPositionMinX, minY + height, 0.0D).func_225583_a_(0.0F, 1.0F).func_225586_a_(128, 128, 128, 255).endVertex();
-                buffer.func_225582_a_(scrollbarPositionMaxX, minY + height, 0.0D).func_225583_a_(1.0F, 1.0F).func_225586_a_(128, 128, 128, 255).endVertex();
-                buffer.func_225582_a_(scrollbarPositionMaxX, minY, 0.0D).func_225583_a_(1.0F, 0.0F).func_225586_a_(128, 128, 128, 255).endVertex();
-                buffer.func_225582_a_(scrollbarPositionMinX, minY, 0.0D).func_225583_a_(0.0F, 0.0F).func_225586_a_(128, 128, 128, 255).endVertex();
+                buffer.pos(scrollbarPositionMinX, minY + height, 0.0D).tex(0.0F, 1.0F).color(128, 128, 128, 255).endVertex();
+                buffer.pos(scrollbarPositionMaxX, minY + height, 0.0D).tex(1.0F, 1.0F).color(128, 128, 128, 255).endVertex();
+                buffer.pos(scrollbarPositionMaxX, minY, 0.0D).tex(1.0F, 0.0F).color(128, 128, 128, 255).endVertex();
+                buffer.pos(scrollbarPositionMinX, minY, 0.0D).tex(0.0F, 0.0F).color(128, 128, 128, 255).endVertex();
                 tessellator.draw();
                 buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-                buffer.func_225582_a_(scrollbarPositionMinX, minY + height - 1, 0.0D).func_225583_a_(0.0F, 1.0F).func_225586_a_(192, 192, 192, 255).endVertex();
-                buffer.func_225582_a_(scrollbarPositionMaxX - 1, minY + height - 1, 0.0D).func_225583_a_(1.0F, 1.0F).func_225586_a_(192, 192, 192, 255).endVertex();
-                buffer.func_225582_a_(scrollbarPositionMaxX - 1, minY, 0.0D).func_225583_a_(1.0F, 0.0F).func_225586_a_(192, 192, 192, 255).endVertex();
-                buffer.func_225582_a_(scrollbarPositionMinX, minY, 0.0D).func_225583_a_(0.0F, 0.0F).func_225586_a_(192, 192, 192, 255).endVertex();
+                buffer.pos(scrollbarPositionMinX, minY + height - 1, 0.0D).tex(0.0F, 1.0F).color(192, 192, 192, 255).endVertex();
+                buffer.pos(scrollbarPositionMaxX - 1, minY + height - 1, 0.0D).tex(1.0F, 1.0F).color(192, 192, 192, 255).endVertex();
+                buffer.pos(scrollbarPositionMaxX - 1, minY, 0.0D).tex(1.0F, 0.0F).color(192, 192, 192, 255).endVertex();
+                buffer.pos(scrollbarPositionMinX, minY, 0.0D).tex(0.0F, 0.0F).color(192, 192, 192, 255).endVertex();
                 tessellator.draw();
             }
-            Method renderDecorations = AbstractList.class.getDeclaredMethod("renderDecorations", int.class, int.class);
+            Method renderDecorations = AbstractList.class.getDeclaredMethod(ASMAPI.mapMethod("func_230447_a_"), MatrixStack.class, int.class, int.class);
             renderDecorations.setAccessible(true);
-            renderDecorations.invoke(list, mouseX, mouseY);
+            renderDecorations.invoke(list, stack, mouseX, mouseY);
             RenderSystem.enableTexture();
             RenderSystem.shadeModel(7424);
             RenderSystem.enableAlphaTest();

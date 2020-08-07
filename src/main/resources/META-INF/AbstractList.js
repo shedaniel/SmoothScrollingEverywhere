@@ -15,6 +15,11 @@ function initializeCoreMod() {
                 'name': 'net.minecraft.client.gui.widget.list.AbstractList'
             },
             'transformer': function (classNode) {
+                var setScrollAmount = ASMAPI.mapMethod("func_230932_a_")
+                var mouseScrolled = ASMAPI.mapMethod("func_231043_a_")
+                var render = ASMAPI.mapMethod("func_230430_a_")
+                var getMaxScroll = ASMAPI.mapMethod("func_230955_e_")
+                
                 classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "smoothscrollingeverywhere_target", "D", null, 0.0));
                 classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "smoothscrollingeverywhere_start", "J", null, 0));
                 classNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "smoothscrollingeverywhere_duration", "J", null, 0));
@@ -22,14 +27,14 @@ function initializeCoreMod() {
                 for (m in methods) {
                     var method = methods[m];
                     var name = method.name;
-                    if (name == "setScrollAmount") {
+                    if (name == setScrollAmount) {
                         var instructions = method.instructions;
                         var first = instructions.get(0);
                         instructions.insertBefore(first, new VarInsnNode(Opcodes.ALOAD, 0));
                         instructions.insertBefore(first, new VarInsnNode(Opcodes.DLOAD, 1));
                         instructions.insertBefore(first, ASMAPI.buildMethodCall("me/shedaniel/smoothscrollingeverywhere/CustomAbstractList", "clamp", "(Lnet/minecraft/client/gui/widget/list/AbstractList;D)V", ASMAPI.MethodType.STATIC));
                         instructions.insertBefore(first, new InsnNode(Opcodes.RETURN));
-                    } else if (name == "mouseScrolled") {
+                    } else if (name == mouseScrolled) {
                         var instructions = method.instructions;
                         var first = instructions.get(0);
                         instructions.insertBefore(first, new VarInsnNode(Opcodes.ALOAD, 0));
@@ -37,7 +42,7 @@ function initializeCoreMod() {
                         instructions.insertBefore(first, new MethodInsnNode(Opcodes.INVOKESTATIC, "me/shedaniel/smoothscrollingeverywhere/CustomAbstractList", "mouseScrolled", "(Lnet/minecraft/client/gui/widget/list/AbstractList;D)V", false));
                         instructions.insertBefore(first, new InsnNode(Opcodes.ICONST_1));
                         instructions.insertBefore(first, new InsnNode(Opcodes.IRETURN));
-                    } else if (name == "render") {
+                    } else if (name == render) {
                         // TODO: Find a better method to edit the scroll bar
                         var instructions = method.instructions;
                         var insnArray = instructions.toArray();
@@ -45,11 +50,12 @@ function initializeCoreMod() {
                             var insn = insnArray[i];
                             if (insn instanceof MethodInsnNode) {
                                 if (insn.owner == "net/minecraft/client/gui/widget/list/AbstractList" &&
-                                    insn.name == "getMaxScroll" && insn.desc == "()I") {
+                                    insn.name == getMaxScroll && insn.desc == "()I") {
                                     instructions.insertBefore(insn, new VarInsnNode(Opcodes.ALOAD, 0));
-                                    instructions.insertBefore(insn, new VarInsnNode(Opcodes.ILOAD, 1));
+                                    instructions.insertBefore(insn, new VarInsnNode(Opcodes.ALOAD, 1));
                                     instructions.insertBefore(insn, new VarInsnNode(Opcodes.ILOAD, 2));
-                                    instructions.insertBefore(insn, new MethodInsnNode(Opcodes.INVOKESTATIC, "me/shedaniel/smoothscrollingeverywhere/CustomAbstractList", "renderScrollbar", "(Lnet/minecraft/client/gui/widget/list/AbstractList;II)V", false));
+                                    instructions.insertBefore(insn, new VarInsnNode(Opcodes.ILOAD, 3));
+                                    instructions.insertBefore(insn, new MethodInsnNode(Opcodes.INVOKESTATIC, "me/shedaniel/smoothscrollingeverywhere/CustomAbstractList", "renderScrollbar", "(Lnet/minecraft/client/gui/widget/list/AbstractList;Lcom/mojang/blaze3d/matrix/MatrixStack;II)V", false));
                                     instructions.insertBefore(insn, new InsnNode(Opcodes.RETURN));
                                     break;
                                 }
@@ -57,7 +63,7 @@ function initializeCoreMod() {
                         }
                         var first = instructions.get(0);
                         instructions.insertBefore(first, new VarInsnNode(Opcodes.ALOAD, 0));
-                        instructions.insertBefore(first, new VarInsnNode(Opcodes.FLOAD, 3));
+                        instructions.insertBefore(first, new VarInsnNode(Opcodes.FLOAD, 4));
                         instructions.insertBefore(first, new MethodInsnNode(Opcodes.INVOKESTATIC, "me/shedaniel/smoothscrollingeverywhere/CustomAbstractList", "updatePosition", "(Lnet/minecraft/client/gui/widget/list/AbstractList;F)V", false));
                     }
                 }
