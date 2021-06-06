@@ -4,6 +4,7 @@ issueTrackerURL="https://github.com/shedaniel/SmoothScrollingEverywhere/issues/"
 displayURL="https://www.youtube.com/watch?v=TyeTJulxPMg"
 logoFile="smoothscrollingicon.png"
 authors="shedaniel"
+license="Apache-2.0"
 [[mods]]
 modId="smooth-scrolling-everywhere"
 version="${version}"
