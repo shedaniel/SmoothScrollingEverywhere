@@ -146,7 +146,7 @@ public class SmoothScrollingEverywhere implements ClientModInitializer {
 
 				@Override
 				public void appendNarrations(NarrationMessageBuilder builder) {
-					// TODO Auto-generated method stub
+
 					
 				}
             };
@@ -184,7 +184,7 @@ public class SmoothScrollingEverywhere implements ClientModInitializer {
 
 			@Override
 			public List<? extends Selectable> narratables() {
-				// TODO Auto-generated method stub
+
 				return null;
 			}
         });
@@ -202,7 +202,7 @@ public class SmoothScrollingEverywhere implements ClientModInitializer {
 
 				@Override
 				public void appendNarrations(NarrationMessageBuilder builder) {
-					// TODO Auto-generated method stub
+
 					
 				}
             };
@@ -240,7 +240,7 @@ public class SmoothScrollingEverywhere implements ClientModInitializer {
 
 			@Override
 			public List<? extends Selectable> narratables() {
-				// TODO Auto-generated method stub
+
 				return null;
 			}
         });
