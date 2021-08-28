@@ -1,2 +1,2 @@
 # Smooth Scrolling Everywhere
-Almost ready, just need a few things to be completed.
+1.17.1 port of Smooth Scorlling Everywhere.
