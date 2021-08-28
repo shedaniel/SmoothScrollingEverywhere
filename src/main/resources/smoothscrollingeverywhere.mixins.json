@@ -11,5 +11,3 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "refmap": "SmoothScrollingEverywhere-refmap.json"
-}
