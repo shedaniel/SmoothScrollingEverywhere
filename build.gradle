@@ -63,7 +63,6 @@ publishing {
             artifact(sourcesJar) {
                 builtBy remapSourcesJar
             }
-            artifact javadocsJar
             groupId = project.group
             artifactId = project.archivesBaseName
             version = project.version
