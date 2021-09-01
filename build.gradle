@@ -1,96 +1,59 @@
 plugins {
-    id 'fabric-loom' version '0.4.13'
-    id 'maven-publish'
-    id 'maven'
-    id 'signing'
-    id 'com.jfrog.bintray' version '1.8.4'
+	id 'fabric-loom' version '0.9-SNAPSHOT'
+	id 'maven-publish'
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
-minecraft {
-}
 
 repositories {
-    jcenter()
-    maven { url "https://dl.bintray.com/shedaniel/legacy-yarn-updated" }
+		maven { url "https://maven.shedaniel.me" }
+		maven { url "https://maven.terraformersmc.com/releases" }
+    	mavenCentral()
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "me.shedaniel:legacy-yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation 'me.shedaniel.cloth:config-2:4.1.0-unstable'
-    modImplementation "io.github.prospector:modmenu:${modmenu_version}"
-    include 'me.shedaniel.cloth:config-2:4.1.0-unstable'
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config}") {
+       exclude(group: "net.fabricmc.fabric-api")
+    }
+
 }
 
 processResources {
-    inputs.property "version", project.version
+	inputs.property "version", project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
-    }
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+	it.options.release = 16
+}
+
+java {
+
+	withSourcesJar()
+	withJavadocJar()
 }
 
 jar {
-    from "LICENSE"
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}"}
+	}
 }
 
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_KEY')
-    publications = ["mavenJava"]
-    publish = true
-    pkg {
-        repo = "shedaniel-mods"
-        name = "SmoothScrollingEverywhere"
-        userOrg = "shedaniel"
-        licenses = ["GPL-3.0"]
-        version {
-            name = project.version
-            vcsTag = project.version
-            released = new Date()
-            desc = "Smooth Scrolling Everywhere"
-            githubRepo = 'shedaniel/SmoothScrollingEverywhere'
-            websiteUrl = 'https://github.com/shedaniel/SmoothScrollingEverywhere'
-            issueTrackerUrl = 'https://github.com/shedaniel/SmoothScrollingEverywhere/issues'
-            vcsUrl = 'https://github.com/shedaniel/SmoothScrollingEverywhere.git'
-            gpg {
-                sign = true
-            }
-        }
-    }
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocs(type: Javadoc) {
-    source = sourceSets.main.allJava
-}
-
-task javadocsJar(type: Jar, dependsOn: javadocs) {
-    classifier = "javadocs"
-    javadocs.failOnError false
-    from javadocs.destinationDir
-}
-
+// configure the maven publication
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -100,15 +63,13 @@ publishing {
             artifact(sourcesJar) {
                 builtBy remapSourcesJar
             }
-            artifact javadocsJar
             groupId = project.group
             artifactId = project.archivesBaseName
             version = project.version
         }
     }
 
-    repositories {
-        // uncomment to publish to the local maven
-        // mavenLocal()
-    }
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+	}
 }

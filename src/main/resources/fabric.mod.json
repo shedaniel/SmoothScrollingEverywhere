@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "smoothscrollingeverywhere",
-  "version": "${version}",
+  "version": "3.0.3-unstable",
   "name": "Smooth Scrolling Everywhere",
   "description": "Adds smooth scrolling to every list.",
   "authors": [
@@ -19,15 +19,22 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.4.0",
-    "cloth-config2": ">=3.0.0-"
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.17.x",
+    "java": ">=16"
   },
   "contact": {
     "homepage": "https://curseforge.com/minecraft/mc-mods/smooth-scrolling-everywhere-fabric",
     "sources": "https://github.com/shedaniel/SmoothScrollingEverywhere",
-    "issues": "https://github.com/shedaniel/SmoothScrollingEverywhere/issues"
+    "issues": "https://discord.gg/rbxu4Fk"
   },
   "custom": {
-    "modmenu:clientsideOnly": true
-  }
+	"modmenu:clientsideonly": true
+  },  
+  "jars": [
+  	{
+      "file": "META-INF/jars/cloth-config-5.0.38-fabric.jar"
+  	}
+  ]	
 }
