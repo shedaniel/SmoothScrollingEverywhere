@@ -31,10 +31,5 @@
   },
   "custom": {
 	"modmenu:clientsideonly": true
-  },  
-  "jars": [
-  	{
-      "file": "META-INF/jars/cloth-config-5.0.38-fabric.jar"
-  	}
-  ]	
+  }
 }
