@@ -1,0 +1,9 @@
+{
+  "title.smoothscrollingeverywhere.config": "Настройки Smooth Scrolling Everywhere",
+  "option.smoothscrollingeverywhere.easingMethod": "Алгоритм расчёта:",
+  "option.smoothscrollingeverywhere.scrollDuration": "Задержка прокрутки:",
+  "option.smoothscrollingeverywhere.scrollStep": "Шаг прокрутки:",
+  "option.smoothscrollingeverywhere.bounceBackMultiplier": "Множитель возврата:",
+  "option.smoothscrollingeverywhere.setDefaultSmoothScroll": "Сбросить настройки",
+  "option.smoothscrollingeverywhere.disableSmoothScroll": "Отключить плавную прокрутку"
+}
