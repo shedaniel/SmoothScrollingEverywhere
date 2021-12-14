@@ -19,10 +19,10 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.11.3",
+    "fabricloader": ">=0.12.9",
     "fabric": "*",
-    "minecraft": "1.17.x",
-    "java": ">=16"
+    "minecraft": "1.18.x",
+    "java": ">=17"
   },
   "contact": {
     "homepage": "https://curseforge.com/minecraft/mc-mods/smooth-scrolling-everywhere-fabric",
