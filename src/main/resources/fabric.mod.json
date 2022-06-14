@@ -19,17 +19,14 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.12.9",
+    "fabricloader": ">=0.14.7",
     "fabric": "*",
-    "minecraft": "1.18.x",
+    "minecraft": ">=1.18",
     "java": ">=17"
   },
   "contact": {
     "homepage": "https://curseforge.com/minecraft/mc-mods/smooth-scrolling-everywhere-fabric",
     "sources": "https://github.com/shedaniel/SmoothScrollingEverywhere",
     "issues": "https://discord.gg/rbxu4Fk"
-  },
-  "custom": {
-	"modmenu:clientsideonly": true
   }
 }
