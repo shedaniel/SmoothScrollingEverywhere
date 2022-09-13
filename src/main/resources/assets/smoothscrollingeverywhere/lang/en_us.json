@@ -1,9 +1,7 @@
 {
-  "title.smoothscrollingeverywhere.config": "Smooth Scrolling Everywhere Config",
-  "option.smoothscrollingeverywhere.easingMethod": "Easing Method:",
-  "option.smoothscrollingeverywhere.scrollDuration": "Scrolling Duration:",
-  "option.smoothscrollingeverywhere.scrollStep": "Scrolling Step:",
-  "option.smoothscrollingeverywhere.bounceBackMultiplier": "Bounce Back Multiplier:",
-  "option.smoothscrollingeverywhere.setDefaultSmoothScroll": "Set Default Smooth Scroll",
-  "option.smoothscrollingeverywhere.disableSmoothScroll": "Disable Smooth Scroll"
+  "text.autoconfig.smoothscrollingeverywhere.title": "Smooth Scrolling Everywhere",
+  "text.autoconfig.smoothscrollingeverywhere.option.easingMethod": "Easing Method",
+  "text.autoconfig.smoothscrollingeverywhere.option.scrollDuration": "Scrolling Duration",
+  "text.autoconfig.smoothscrollingeverywhere.option.scrollStep": "Scrolling Step",
+  "text.autoconfig.smoothscrollingeverywhere.option.bounceBackMultiplier": "Bounce Back Multiplier"
 }
