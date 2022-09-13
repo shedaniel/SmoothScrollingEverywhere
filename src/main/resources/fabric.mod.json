@@ -14,15 +14,22 @@
     "smoothscrollingeverywhere.mixins.json"
   ],
   "entrypoints": {
+    "main": [
+      "me.shedaniel.smoothscrollingeverywhere.SmoothScrollingEverywhere"
+    ],
     "modmenu": [
-      "me.shedaniel.smoothscrollingeverywhere.SmoothScrollingEverywhereMM"
+      "me.shedaniel.smoothscrollingeverywhere.config.ModMenuIntegration"
     ]
   },
   "depends": {
     "fabricloader": ">=0.14.7",
     "fabric": "*",
     "minecraft": ">=1.19",
-    "java": ">=17"
+    "java": ">=17",
+    "cloth-config": ">=7.0.72"
+  },
+  "suggests": {
+    "modmenu": ">=4.0.0"
   },
   "contact": {
     "homepage": "https://curseforge.com/minecraft/mc-mods/smooth-scrolling-everywhere-fabric",
