@@ -1,0 +1,9 @@
+{
+  "title.smoothscrollingeverywhere.config": "平滑滚动(Smooth Scrolling Everywhere)配置",
+  "option.smoothscrollingeverywhere.easingMethod": "缓动方式:",
+  "option.smoothscrollingeverywhere.scrollDuration": "滚动持续时间:",
+  "option.smoothscrollingeverywhere.scrollStep": "滚动步骤:",
+  "option.smoothscrollingeverywhere.bounceBackMultiplier": "反弹倍数:",
+  "option.smoothscrollingeverywhere.setDefaultSmoothScroll": "默认平滑滚动设置",
+  "option.smoothscrollingeverywhere.disableSmoothScroll": "禁用平滑滚动"
+}
