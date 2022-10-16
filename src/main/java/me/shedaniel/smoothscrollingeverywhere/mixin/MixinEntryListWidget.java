@@ -32,6 +32,8 @@ public abstract class MixinEntryListWidget {
 
     @Shadow protected abstract int getScrollbarPositionX();
 
+    @Shadow public abstract int getMaxScroll();
+
     @Inject(method = "setScrollAmount", at = @At("HEAD"))
     public void setScrollAmount(double double_1, CallbackInfo callbackInfo) {
         scroller.scrollAmount = clampExtension(double_1, scroller.getMaxScroll(), 0);
@@ -55,22 +57,24 @@ public abstract class MixinEntryListWidget {
             cancellable = true)
     public void renderScrollbar(MatrixStack stack, int int_1, int int_2, float float_1, CallbackInfo callbackInfo) {
         // Render Black Background
-        final Tessellator tessellator = Tessellator.getInstance();
-        final BufferBuilder bufferBuilder = tessellator.getBuffer();
+        if (this.getMaxScroll() > 0) {
+            final Tessellator tessellator = Tessellator.getInstance();
+            final BufferBuilder bufferBuilder = tessellator.getBuffer();
 
-        final int i = this.getScrollbarPositionX();
-        final int j = i + 6;
+            final int i = this.getScrollbarPositionX();
+            final int j = i + 6;
 
-        RenderSystem.disableTexture();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+            RenderSystem.disableTexture();
+            RenderSystem.setShader(GameRenderer::getPositionColorShader);
+            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 
-        bufferBuilder.vertex(i, this.bottom, 0.0).color(0, 0, 0, 255).next();
-        bufferBuilder.vertex(j, this.bottom, 0.0).color(0, 0, 0, 255).next();
-        bufferBuilder.vertex(j, this.top, 0.0).color(0, 0, 0, 255).next();
-        bufferBuilder.vertex(i, this.top, 0.0).color(0, 0, 0, 255).next();
+            bufferBuilder.vertex(i, this.bottom, 0.0).color(0, 0, 0, 255).next();
+            bufferBuilder.vertex(j, this.bottom, 0.0).color(0, 0, 0, 255).next();
+            bufferBuilder.vertex(j, this.top, 0.0).color(0, 0, 0, 255).next();
+            bufferBuilder.vertex(i, this.top, 0.0).color(0, 0, 0, 255).next();
 
-        tessellator.draw();
+            tessellator.draw();
+        }
 
         scroller.renderScrollBar();
         RenderSystem.enableTexture();
