@@ -48,7 +48,6 @@ public abstract class MixinEntryListWidget {
             cancellable = true)
     public void renderScrollbar(MatrixStack stack, int int_1, int int_2, float float_1, CallbackInfo callbackInfo) {
         scroller.renderScrollBar();
-        RenderSystem.enableTexture();
         //RenderSystem.shadeModel(7424);
         //RenderSystem.enableAlphaTest();
         RenderSystem.disableBlend();
