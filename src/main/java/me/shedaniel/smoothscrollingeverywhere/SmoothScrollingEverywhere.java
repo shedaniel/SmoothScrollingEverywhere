@@ -140,7 +140,7 @@ public class SmoothScrollingEverywhere implements ClientModInitializer {
                 }
 
 				@Override
-				public void appendNarrations(NarrationMessageBuilder builder) {
+				public void appendClickableNarrations(NarrationMessageBuilder builder) {
 
 
 				}
@@ -171,8 +171,8 @@ public class SmoothScrollingEverywhere implements ClientModInitializer {
                 super.render(matrices, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isSelected, delta);
                 Window window = MinecraftClient.getInstance().getWindow();
                 this.buttonWidget.active = this.isEditable();
-                this.buttonWidget.y = y;
-                this.buttonWidget.x = x + entryWidth / 2 - width / 2;
+                this.buttonWidget.setY(y);
+                this.buttonWidget.setX(x + entryWidth / 2 - width / 2);
                 this.buttonWidget.setWidth(width);
                 this.buttonWidget.render(matrices, mouseX, mouseY, delta);
             }
@@ -195,11 +195,10 @@ public class SmoothScrollingEverywhere implements ClientModInitializer {
                     bounceMultiplierEntry.setValue(-10);
                 }
 
-				@Override
-				public void appendNarrations(NarrationMessageBuilder builder) {
+                @Override
+                public void appendClickableNarrations(NarrationMessageBuilder builder) {
 
-					
-				}
+                }
             };
             private final List<ClickableWidget> children = ImmutableList.of(buttonWidget);
             
@@ -227,8 +226,8 @@ public class SmoothScrollingEverywhere implements ClientModInitializer {
                 super.render(matrices, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isSelected, delta);
                 Window window = MinecraftClient.getInstance().getWindow();
                 this.buttonWidget.active = this.isEditable();
-                this.buttonWidget.y = y;
-                this.buttonWidget.x = x + entryWidth / 2 - width / 2;
+                this.buttonWidget.setY(y);
+                this.buttonWidget.setX(x + entryWidth / 2 - width / 2);
                 this.buttonWidget.setWidth(width);
                 this.buttonWidget.render(matrices, mouseX, mouseY, delta);
             }
