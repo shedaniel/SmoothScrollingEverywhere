@@ -5,6 +5,7 @@ import me.shedaniel.clothconfig2.ClothConfigInitializer;
 import me.shedaniel.clothconfig2.api.ScrollingContainer;
 import me.shedaniel.smoothscrollingeverywhere.EntryListWidgetScroller;
 import net.minecraft.client.gui.widget.EntryListWidget;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,7 +24,7 @@ public abstract class MixinEntryListWidget {
     @Shadow private double scrollAmount;
     
     @Shadow
-    protected abstract void renderDecorations(MatrixStack stack, int int_1, int int_2);
+    protected abstract void renderDecorations(DrawContext context, int int_1, int int_2);
     
     @Inject(method = "setScrollAmount", at = @At("HEAD"))
     public void setScrollAmount(double double_1, CallbackInfo callbackInfo) {
@@ -38,7 +39,7 @@ public abstract class MixinEntryListWidget {
     }
     
     @Inject(method = "render", at = @At("HEAD"))
-    public void render(MatrixStack stack, int int_1, int int_2, float delta, CallbackInfo callbackInfo) {
+    public void render(DrawContext context, int int_1, int int_2, float delta, CallbackInfo callbackInfo) {
         scroller.updatePosition(delta);
         this.scrollAmount = scroller.scrollAmount;
     }
@@ -46,12 +47,12 @@ public abstract class MixinEntryListWidget {
     @Inject(method = "render",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/EntryListWidget;getMaxScroll()I", ordinal = 0, shift = At.Shift.AFTER),
             cancellable = true)
-    public void renderScrollbar(MatrixStack stack, int int_1, int int_2, float float_1, CallbackInfo callbackInfo) {
-        scroller.renderScrollBar();
+    public void renderScrollbar(DrawContext context, int int_1, int int_2, float float_1, CallbackInfo callbackInfo) {
+        scroller.renderScrollBar(context);
         //RenderSystem.shadeModel(7424);
         //RenderSystem.enableAlphaTest();
         RenderSystem.disableBlend();
-        this.renderDecorations(stack, int_1, int_2);
+        this.renderDecorations(context, int_1, int_2);
         callbackInfo.cancel();
     }
 }

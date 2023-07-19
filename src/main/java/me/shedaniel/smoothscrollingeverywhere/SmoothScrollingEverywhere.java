@@ -19,10 +19,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.PressableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -167,14 +167,14 @@ public class SmoothScrollingEverywhere implements ClientModInitializer {
             }
 
             @Override
-            public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
-                super.render(matrices, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isSelected, delta);
+            public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
+                super.render(context, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isSelected, delta);
                 Window window = MinecraftClient.getInstance().getWindow();
                 this.buttonWidget.active = this.isEditable();
                 this.buttonWidget.setY(y);
                 this.buttonWidget.setX(x + entryWidth / 2 - width / 2);
                 this.buttonWidget.setWidth(width);
-                this.buttonWidget.render(matrices, mouseX, mouseY, delta);
+                this.buttonWidget.render(context, mouseX, mouseY, delta);
             }
 
 			@Override
@@ -222,14 +222,14 @@ public class SmoothScrollingEverywhere implements ClientModInitializer {
             }
             
             @Override
-            public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
-                super.render(matrices, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isSelected, delta);
+            public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
+                super.render(context, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isSelected, delta);
                 Window window = MinecraftClient.getInstance().getWindow();
                 this.buttonWidget.active = this.isEditable();
                 this.buttonWidget.setY(y);
                 this.buttonWidget.setX(x + entryWidth / 2 - width / 2);
                 this.buttonWidget.setWidth(width);
-                this.buttonWidget.render(matrices, mouseX, mouseY, delta);
+                this.buttonWidget.render(context, mouseX, mouseY, delta);
             }
 
 			@Override
