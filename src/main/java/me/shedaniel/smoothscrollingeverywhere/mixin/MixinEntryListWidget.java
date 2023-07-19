@@ -6,7 +6,6 @@ import me.shedaniel.clothconfig2.api.ScrollingContainer;
 import me.shedaniel.smoothscrollingeverywhere.EntryListWidgetScroller;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
